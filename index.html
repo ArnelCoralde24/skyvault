@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Vault Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="loginScreen" class="screen">
+        <div class="card auth-card">
+          <div class="hero-badge">Secure • Fast • Organized</div>
+          <h1>File Vault</h1>
+          <p>Sign in to manage photos, videos, documents, and folders from one beautifully simple workspace.</p>
+          <form id="loginForm" class="auth-form">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="admin@example.com" required />
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="123456" required />
+
+            <button type="submit" class="primary-btn">Login</button>
+          </form>
+          <div class="feature-list">
+            <span>Drag & drop uploads</span>
+            <span>Folder management</span>
+            <span>Live previews</span>
+          </div>
+          <p class="hint">Demo accounts: admin@example.com / 123456 and user@example.com / 123456</p>
+          <p id="loginMessage" class="message"></p>
+        </div>
+      </section>
+
+      <section id="dashboardScreen" class="screen hidden">
+        <div class="dashboard-layout">
+          <aside id="sidebar" class="sidebar">
+            <div class="sidebar-head">
+              <div>
+                <p class="eyebrow">Workspace</p>
+                <h2>File Vault</h2>
+              </div>
+              <button id="menuToggle" class="icon-btn mobile-only">☰</button>
+            </div>
+            <nav class="sidebar-nav">
+              <button class="nav-btn active" data-view="files">Files</button>
+              <button class="nav-btn" data-view="profile">Profile</button>
+              <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+            <div class="sidebar-footer">
+              <button id="logoutBtn" class="ghost-btn full">Logout</button>
+            </div>
+          </aside>
+
+          <div class="main-panel">
+            <header class="topbar">
+              <div>
+                <h2 id="dashboardTitle">Dashboard</h2>
+                <p id="dashboardSubtitle" class="subtle-text">Manage your files</p>
+              </div>
+              <div class="topbar-actions">
+                <button id="themeToggle" class="icon-btn" title="Toggle theme">☀</button>
+                <div id="notificationBell" class="notification-bell">🔔<span id="notificationCount" class="badge">0</span></div>
+              </div>
+            </header>
+
+            <section id="filesView" class="view active">
+              <div class="card panel-card">
+                <div class="toolbar">
+                  <div class="toolbar-left">
+                    <button id="backFolderBtn" class="ghost-btn">⬅ Back</button>
+                    <div>
+                      <p class="subtle-text">Current folder</p>
+                      <div id="breadcrumb" class="breadcrumb">Home</div>
+                    </div>
+                  </div>
+                  <div class="toolbar-right">
+                    <input id="searchInput" type="search" placeholder="Search files or folders" />
+                    <select id="sortSelect">
+                      <option value="name">Sort by name</option>
+                      <option value="size">Sort by size</option>
+                      <option value="type">Sort by type</option>
+                      <option value="date">Sort by date</option>
+                    </select>
+                    <button id="sortDirBtn" class="ghost-btn" title="Toggle sort direction">↑</button>
+                    <button id="newFolderBtn" class="ghost-btn">New folder</button>
+                    <button id="uploadBtn" class="primary-btn">Upload files</button>
+                  </div>
+                </div>
+
+                <div class="upload-card card-soft">
+                  <div id="dropZone" class="drop-zone">
+                    <p><strong>Drag and drop files here</strong></p>
+                    <p>Upload photos, videos, documents, and other files.</p>
+                    <input id="fileInput" type="file" multiple hidden />
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+                    <span id="uploadStatus">Ready to upload</span>
+                  </div>
+                </div>
+
+                <div class="storage-row">
+                  <div>
+                    <p class="subtle-text">Storage used</p>
+                    <strong id="storageText">0 MB of 100 MB</strong>
+                  </div>
+                  <div class="storage-bar"><div id="storageFill" class="storage-fill"></div></div>
+                </div>
+
+                <div id="adminPanel" class="card admin-panel hidden">
+                  <div class="admin-panel-head">
+                    <div>
+                      <h3>Admin Center</h3>
+                      <p>Manage users, storage, and system activity.</p>
+                    </div>
+                    <button id="adminRefreshBtn" class="ghost-btn">Refresh</button>
+                  </div>
+                  <div class="admin-stats-grid">
+                    <div class="stat-card">
+                      <h4 id="adminUsersCount">0</h4>
+                      <p>Registered users</p>
+                    </div>
+                    <div class="stat-card">
+                      <h4 id="adminActiveCount">0</h4>
+                      <p>Active users</p>
+                    </div>
+                    <div class="stat-card">
+                      <h4 id="adminStorageCount">0 MB</h4>
+                      <p>Storage used</p>
+                    </div>
+                  </div>
+                  <div class="admin-tools">
+                    <input id="adminSearchInput" type="search" placeholder="Search users or files" />
+                    <select id="adminFilterSelect">
+                      <option value="all">All users</option>
+                      <option value="active">Active only</option>
+                      <option value="suspended">Suspended only</option>
+                    </select>
+                  </div>
+                  <div id="userList" class="user-list"></div>
+                  <div class="admin-sections">
+                    <div class="card admin-section">
+                      <h4>Recent activity</h4>
+                      <ul id="activityLog" class="activity-log"></ul>
+                    </div>
+                    <div class="card admin-section">
+                      <h4>System overview</h4>
+                      <div id="analyticsChart" class="analytics-chart"></div>
+                      <div id="systemStats" class="system-stats"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="itemsGrid" class="items-grid"></div>
+              </div>
+            </section>
+
+            <section id="profileView" class="view hidden">
+              <div class="card panel-card">
+                <h3>Profile</h3>
+                <div class="profile-card">
+                  <div class="avatar">U</div>
+                  <div>
+                    <h4 id="profileName">User</h4>
+                    <p id="profileEmail">user@example.com</p>
+                    <p id="profileRole">Role</p>
+                  </div>
+                </div>
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <h4 id="filesCount">0</h4>
+                    <p>Files saved</p>
+                  </div>
+                  <div class="stat-card">
+                    <h4 id="foldersCount">0</h4>
+                    <p>Folders created</p>
+                  </div>
+                  <div class="stat-card">
+                    <h4 id="usedSpace">0 MB</h4>
+                    <p>Storage used</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="settingsView" class="view hidden">
+              <div class="card panel-card">
+                <h3>Settings</h3>
+                <div class="setting-row">
+                  <div>
+                    <h4>Theme</h4>
+                    <p>Switch between dark and light mode.</p>
+                  </div>
+                  <button id="settingsThemeToggle" class="ghost-btn">Toggle theme</button>
+                </div>
+                <div class="setting-row">
+                  <div>
+                    <h4>Notifications</h4>
+                    <p>Get feedback for uploads and actions.</p>
+                  </div>
+                  <button id="notificationToggle" class="ghost-btn">Enabled</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="previewModal" class="modal hidden">
+      <div class="modal-card">
+        <div class="modal-head">
+          <h3 id="previewTitle">Preview</h3>
+          <button id="closePreviewBtn" class="icon-btn">✕</button>
+        </div>
+        <div id="previewContent" class="preview-content"></div>
+      </div>
+    </div>
+
+    <div id="notificationArea" class="notification-area"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
